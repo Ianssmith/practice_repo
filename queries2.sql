@@ -11,6 +11,7 @@ left join B
 on A.color_id = B.color_id
 where B.color_id is NULL;
 
+
 #right outer join
 select A.name, B.color from A
 right join B
@@ -28,13 +29,23 @@ inner join B
 on A.color_id = B.color_id;
 
 #full outer join
-select * from A
-full join B
+select A.name, B.color from A
+left join B
+on A.color_id = B.color_id
+union
+select A.name, B.color from A
+right join B
 on A.color_id = B.color_id;
 
-#empty outer join
-select * from A
-full join B
+#anti outer join
+select A.name, B.color from A
+left join B
+on A.color_id = B.color_id
+where A.color_id is null
+or B.color_id is null
+union
+select A.name, B.color from A
+right join B
 on A.color_id = B.color_id
 where A.color_id is null
 or B.color_id is null;
