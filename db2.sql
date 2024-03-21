@@ -15,7 +15,8 @@ VALUES
     ('1','apple'),
     ('2','banana'),
     ('2','banana'),
-    ('3','guava');
+    ('3','guava'),
+    ('5','dragonfruit');
 
 create table B(
     color_id integer,
@@ -27,6 +28,7 @@ insert into B
 VALUES
     ('1','red'),
     ('2','yellow'),
-    ('3','green');
+    ('3','green'),
+    ('4','purple');
 
 show tables;
