@@ -14,15 +14,31 @@ GROUP BY sales.customer_id
 
 -- 3. What was the first item from the menu purchased by each customer?
 -- select sales.product_id
-SELECT menu.product_name
-FROM( SELECT ROW_NUMBER() OVER(PARTITION BY sales.customer_id ORDER BY sales.order_date ASC) AS orders
-    FROM sales
-    INNER JOIN menu
-    ON sales.product_id = menu.product_id) AS order_list
-LEFT JOIN sales
-ON menu.product_id = sales.product_id
-WHERE orders = 1 
+/*
+#without cte order_rank is not accessable
+select *,
+dense_rank() over (order by order_date) as order_rank
+from sales
+where order_rank = 1
+group by customer_id
 ;
+*/
+
+with cte_func as(
+    select sales.customer_id,
+    sales.order_date,
+    menu.product_name,
+    dense_rank() over (
+        partition by sales.customer_id 
+        order by sales.order_date) as order_rank
+    from sales
+    inner join menu
+    on sales.product_id = menu.product_id
+)
+select * 
+from cte_func 
+where order_rank = 1
+; 
 
 -- 4. What is the most purchased item on the menu and how many times was it purchased by all customers?
 
