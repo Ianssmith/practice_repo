@@ -40,7 +40,23 @@ from cte_func
 where order_rank = 1
 ; 
 
+/*
+sales(customer_id, order_date, product_id)
+menu(product_id, product_name, price)
+members(customer_id, join_date)
+*/
 -- 4. What is the most purchased item on the menu and how many times was it purchased by all customers?
+
+SELECT menu.product_name, COUNT(sales.product_id) as counts
+FROM sales
+inner join menu
+    on menu.product_id = sales.product_id
+GROUP BY menu.product_name #question: why does this not work when I group by sales.product_id instead
+ORDER BY counts DESC
+LIMIT 1
+
+;
+
 
 -- 5. Which item was the most popular for each customer?
 
