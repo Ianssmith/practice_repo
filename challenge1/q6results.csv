@@ -1,0 +1,3 @@
+customer_id,order_date,myrank,product_name
+B,2021-01-11,1,sushi
+A,2021-01-10,1,ramen

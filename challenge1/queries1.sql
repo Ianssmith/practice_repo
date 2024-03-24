@@ -52,19 +52,12 @@ LIMIT 1
 
 ;
 
-/*
-sales(customer_id, order_date, product_id)
-menu(product_id, product_name, price)
-members(customer_id, join_date)
-*/
-
 -- 5. Which item was the most popular for each customer?
 
 /*
 question: why can I run?
 select * from sales group by sales.customer_id; is there a workaround
 */
-select * from sales;
 
 with favs as(
 select sales.customer_id, 
@@ -86,12 +79,44 @@ select customer_id,
     orderCounts 
     from favs
     where myrank = 1
-
 ;
 
 -- 6. Which item was purchased first by the customer after they became a member?
 
+with myfunc as (
+    select 
+        sales.customer_id,
+        sales.product_id,
+        sales.order_date,
+        dense_rank() over (partition by sales.customer_id
+            order by sales.order_date asc) as myrank
+    from sales
+    inner join members
+    on members.customer_id = sales.customer_id
+    and sales.order_date > members.join_date
+
+)
+
+select myfunc.customer_id,
+    myfunc.order_date,
+    myfunc.myrank,
+    menu.product_name
+from myfunc
+inner join menu
+on myfunc.product_id = menu.product_id
+where myfunc.myrank = 1
+;
+
 -- 7. Which item was purchased just before the customer became a member?
+
+/*
+sales(customer_id, order_date, product_id)
+menu(product_id, product_name, price)
+members(customer_id, join_date)
+*/
+select * from members;
+select * from sales;
+select * from menu;
 
 -- 8. What is the total items and amount spent for each member before they became a member?
 
