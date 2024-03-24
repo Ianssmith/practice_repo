@@ -40,11 +40,6 @@ from cte_func
 where order_rank = 1
 ; 
 
-/*
-sales(customer_id, order_date, product_id)
-menu(product_id, product_name, price)
-members(customer_id, join_date)
-*/
 -- 4. What is the most purchased item on the menu and how many times was it purchased by all customers?
 
 SELECT menu.product_name, COUNT(sales.product_id) as counts
@@ -57,8 +52,42 @@ LIMIT 1
 
 ;
 
+/*
+sales(customer_id, order_date, product_id)
+menu(product_id, product_name, price)
+members(customer_id, join_date)
+*/
 
 -- 5. Which item was the most popular for each customer?
+
+/*
+question: why can I run?
+select * from sales group by sales.customer_id; is there a workaround
+*/
+select * from sales;
+
+with favs as(
+select sales.customer_id, 
+    menu.product_name,
+    count(menu.product_id) as orderCounts,
+    dense_rank() over (
+        partition by sales.customer_id
+        order by count(sales.customer_id) desc 
+    ) as myrank 
+
+from menu
+inner join sales
+on menu.product_id = sales.product_id
+group by sales.customer_id, menu.product_name 
+
+)
+select customer_id, 
+    product_name,
+    orderCounts 
+    from favs
+    where myrank = 1
+
+;
 
 -- 6. Which item was purchased first by the customer after they became a member?
 
