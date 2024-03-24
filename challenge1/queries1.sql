@@ -94,9 +94,7 @@ with myfunc as (
     inner join members
     on members.customer_id = sales.customer_id
     and sales.order_date > members.join_date
-
 )
-
 select myfunc.customer_id,
     myfunc.order_date,
     myfunc.myrank,
@@ -117,6 +115,29 @@ members(customer_id, join_date)
 select * from members;
 select * from sales;
 select * from menu;
+
+with myfunc as (
+    select 
+        sales.customer_id,
+        sales.product_id,
+        sales.order_date,
+        dense_rank() over (partition by sales.customer_id
+            order by sales.order_date desc) as myrank
+    from sales
+    inner join members
+    on members.customer_id = sales.customer_id
+    and sales.order_date < members.join_date
+)
+select myfunc.customer_id,
+    myfunc.order_date,
+    myfunc.myrank,
+    menu.product_name
+from myfunc
+inner join menu
+on myfunc.product_id = menu.product_id
+where myfunc.myrank = 1
+;
+
 
 -- 8. What is the total items and amount spent for each member before they became a member?
 
