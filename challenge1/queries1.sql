@@ -155,4 +155,15 @@ select members.join_date from members;
 select * from sales;
 select * from menu;
 
+select sales.customer_id,
+    count(sales.product_id),
+    sum(menu.price)
+    from sales
+    inner join menu
+    on sales.product_id = menu.product_id
+    where menu.product_name = "sushi"
+    group by sales.customer_id
+
+;
+
 -- 10. In the first week after a customer joins the program (including their join date) they earn 2x points on all items, not just sushi - how many points do customer A and B have at the end of January?
