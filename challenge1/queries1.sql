@@ -146,14 +146,6 @@ select sales.customer_id,
     ;
 
 -- 9.  If each $1 spent equates to 10 points and sushi has a 2x points multiplier - how many points would each customer have?
-/*
-sales(customer_id, order_date, product_id)
-menu(product_id, product_name, price)
-members(customer_id, join_date)
-*/
-select members.join_date from members;
-select * from sales;
-select * from menu;
 
 select sales.customer_id,
     count(sales.product_id),
@@ -169,3 +161,24 @@ select sales.customer_id,
 ;
 
 -- 10. In the first week after a customer joins the program (including their join date) they earn 2x points on all items, not just sushi - how many points do customer A and B have at the end of January?
+/*
+sales(customer_id, order_date, product_id)
+menu(product_id, product_name, price)
+members(customer_id, join_date)
+*/
+select * from members;
+select * from sales;
+select * from menu;
+
+select sales.customer_id,
+    sales.order_date,
+    sales.product_id,
+    members.join_date,
+    menu.price
+from sales
+inner join members
+on members.customer_id = sales.customer_id
+inner join menu
+on sales.product_id = menu.product_id
+
+;
