@@ -1,0 +1,4 @@
+customer_id,count(sales.product_id),points
+A,6,860
+B,6,940
+C,3,360

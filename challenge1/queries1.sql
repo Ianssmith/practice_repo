@@ -157,11 +157,13 @@ select * from menu;
 
 select sales.customer_id,
     count(sales.product_id),
-    sum(menu.price)
+    sum(case 
+        when sales.product_id = 1 then menu.price * 20
+        else menu.price * 10
+    end) as points
     from sales
     inner join menu
     on sales.product_id = menu.product_id
-    where menu.product_name = "sushi"
     group by sales.customer_id
 
 ;
