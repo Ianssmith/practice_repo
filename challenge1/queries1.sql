@@ -107,14 +107,6 @@ where myfunc.myrank = 1
 
 -- 7. Which item was purchased just before the customer became a member?
 
-/*
-sales(customer_id, order_date, product_id)
-menu(product_id, product_name, price)
-members(customer_id, join_date)
-*/
-select * from members;
-select * from sales;
-select * from menu;
 
 with myfunc as (
     select 
@@ -141,6 +133,26 @@ where myfunc.myrank = 1
 
 -- 8. What is the total items and amount spent for each member before they became a member?
 
+select sales.customer_id,
+    sum(menu.price) as total,
+    count(sales.product_id) as orders
+    from sales
+    inner join members
+    on sales.customer_id = members.customer_id
+    and sales.order_date < members.join_date
+    inner join menu
+    on sales.product_id = menu.product_id
+    group by sales.customer_id
+    ;
+
 -- 9.  If each $1 spent equates to 10 points and sushi has a 2x points multiplier - how many points would each customer have?
+/*
+sales(customer_id, order_date, product_id)
+menu(product_id, product_name, price)
+members(customer_id, join_date)
+*/
+select members.join_date from members;
+select * from sales;
+select * from menu;
 
 -- 10. In the first week after a customer joins the program (including their join date) they earn 2x points on all items, not just sushi - how many points do customer A and B have at the end of January?
