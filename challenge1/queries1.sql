@@ -170,15 +170,22 @@ select * from members;
 select * from sales;
 select * from menu;
 
-select sales.customer_id,
-    sales.order_date,
-    sales.product_id,
-    members.join_date,
-    menu.price
-from sales
-inner join members
-on members.customer_id = sales.customer_id
-inner join menu
-on sales.product_id = menu.product_id
+with fulltable as(
+    select sales.customer_id,
+        sales.order_date,
+        sales.product_id,
+        members.join_date,
+        menu.price
+    from sales
+    inner join members
+    on members.customer_id = sales.customer_id
+    inner join menu
+    on sales.product_id = menu.product_id
+)
+
+select sum(fulltable.price * 20)
+from fulltable
+where fulltable.order_date > fulltable.join_date and fulltable.order_date <= fulltable.join_date+6
+group by fulltable.price
 
 ;
