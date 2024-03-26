@@ -170,7 +170,8 @@ select * from members;
 select * from sales;
 select * from menu;
 
-with fulltable as(
+#with fulltable as(
+create temporary table fulltable
     select sales.customer_id,
         sales.order_date,
         sales.product_id,
@@ -181,11 +182,38 @@ with fulltable as(
     on members.customer_id = sales.customer_id
     inner join menu
     on sales.product_id = menu.product_id
-)
+#)
+;
 
-select sum(fulltable.price * 20)
-from fulltable
-where fulltable.order_date > fulltable.join_date and fulltable.order_date <= fulltable.join_date+6
-group by fulltable.price
+#,temptable as(
+create temporary table temptable
+    select sum(fulltable.price * 20) as xtra
+    from fulltable
+    where fulltable.order_date > fulltable.join_date and fulltable.order_date <= fulltable.join_date+6
+    group by fulltable.price
+#)
+;
 
+drop table if exists endtable;
+#,endtable as(
+create temporary table endtable
+    select sum(
+        case 
+            when fulltable.product_id = 1 and fulltable.order_date <= '2021-01-31' then fulltable.price * 20
+            when fulltable.order_date <= '2021-01-31' then fulltable.price * 10
+        end) as points
+    from fulltable
+#)
+;
+
+select * from fulltable;
+select * from temptable;
+select * from endtable;
+
+select xtra
+from temptable
+inner join points
+on 
+
+'2021-01-31'
 ;
