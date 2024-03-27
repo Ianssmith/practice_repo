@@ -23,14 +23,18 @@ def print_menu():
 def get_item_request():
     item = input('What would you like to purchase?')
     quant = get_quantity_request(item)
-    if item == '1':
-    elif item == '2':
-    elif item == '3':
-    else:
-    return item
+    #cart['items'].append(item)
+    #cart['quantities'].append(quant)
+    
+    return item, quant
 
 def get_quantity_request(item):
     quant = input(f'How many {item} would you like?')
+    for i in data:
+        if i['srno'] == item:
+            if i['quant'] < quant:
+                print(f'Unfortunately, we only have{i['quant']} in stock.')
+                return i['quant']
     return quant
 
 def display_stock(item):
@@ -109,11 +113,21 @@ def main():
     elif selection =='2':
         #update customer info
         customerinfo = get_cust_info(id)
+        update_selection = input('What would you like to update:\npress 1 for company\n press 2 for address')
+        if update_selection == '1':
+            newcompany = input('please enter the new info.')
+            customerinfo['company'] = newcompany
+        elif update_selection == '2':
+            newaddress = input('please enter the new info.')
+            customerinfo['address'] = newaddress
         print(customerinfo)
         return_or_quit()
     elif selection =='3':
         #place a new order
-        citem = get_item_request()
+        citem,cquant = get_item_request()
+        cart['items'].append(citem)
+        cart['quantities'].append(cquant)
+
         return_or_quit()
     elif selection =='4':
         #checkout and display customer info
