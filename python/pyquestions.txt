@@ -1,0 +1,60 @@
+Python 
+1.What is init keyword ?
+it is a method used as the constructor function for a python object/class. When a new class is instantiated this method
+is called automatically running any setup functionality for the new instance.
+2.What is self keyword ?
+a keyword used to refer to the current instance of an object within the scope of it's usage.
+3.What is lambda functon?
+an anonymous function which is generally short and concise and for a short lived purpose like a calculation or aggregation operation
+4.Difference between lambda and normal function?
+a lambda is anonymous and has no definition outside of the location where it is created and used.
+5.What are generators? When to use ? share one example
+generators iterate through a sequence on the fly instead of storing everything in memory, they use the 
+yield keyword instead of return and rather than terminationg the function execution is paused until next() is called
+6.Python is compiled or interpreted language ? what does it mean?
+python is interpreted meaning each line of code is processed and executed 
+one after another rather than a file being process and en executable being generated
+7.What is the difference between list and tuples in Python?
+a list is mutable a tuple is immutable a list uses []  a tuple uses ()
+8.What is the difference between list and set in Python?
+both a mutable but a set does not retain an order for it's elements 
+and is optimized for testing for membership; they also do not allow duplicates
+9.When to use dictionary?
+a dictionary is  a key value data structure with the key being the name 
+of the element and the value containing the information so you would potentially 
+want to use this data structure with data having non-numeric keys/identifiers or with more complex
+data structures as the value elements can contain other objects,lists, or even functions
+10.What are decorators? When to use ? share one example
+a decorator is a feature that lets you modify or extend a function without changing the original 
+function by wrapping the original function with additional functionality to be executed before and/or after the original 
+function is executed. It is attached to a function with the @ symbol, it's useful if you 
+for adding convenience or consistency when extending the functionality of a function. For example I had some uncleaned
+data for which in order to be standardized some of the data needed a certain process to be run on it and the rest did not 
+by adding a decorator to the ingestion function I was able to apply the cleaning functionality as needed and without 
+modifying the existing function maintaining compatibility with both inputs
+11.What are Iterators? //(revisit)
+innerworkings of python iteration functionality implemented automatically by for loops 
+but can also be used to create custom iteration functionality
+12.What is slicing?
+pythons syntax for selecting elements, spans or sequence patterns from a list or sequence of ordered elements
+the format is [start:stop:increment_amount] ( the -1 as a value also will the last value or increment backwards depending on the way it's used)
+13.What is mutable and immutable?
+mutable allows for data elements to be changed once initialized, immutable does not.
+14.Python is single thread or multithread?
+python is a general-purpose language and there are ways to use multiple thread but it's default implementation Cpython 
+has a "global interpreter lock" which limits python to 1 thread at a time, at least for CPU bound tasks.
+15.What is GIL: global interpreter lock limiting python to 1 thread at a time
+workaround would be multiple processes with their own python interpreter and memory like in the 'multiprocessing' module
+16.What you don’t like about python?
+It's not as powerful or structured as C/C++ for low level, work, threading and concurrency
+not the best option for mobile app development
+17.What is list Comprehension?
+a succinct way to write a forloop similar to a lambda function which sort of automatically iterates and operates on an list and returns a new list
+18.What are Dunder methods? Give examples
+"double underscore" methods are built-in python methods that provide special functionality to classes and objects
+and are automatically invoked by the python interpreter in certain situations they can be implemented in classes to 
+customize or extend their behavior
+19.What does _init_ method do?
+20.Difference between array and numpy library.
+Numpy is a scientific library optimized for working with data and has highly efficient
+list and matrix calculations and processing, also with a library of scientific methods
