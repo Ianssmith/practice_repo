@@ -146,14 +146,6 @@ select sales.customer_id,
     ;
 
 -- 9.  If each $1 spent equates to 10 points and sushi has a 2x points multiplier - how many points would each customer have?
-/*
-sales(customer_id, order_date, product_id)
-menu(product_id, product_name, price)
-members(customer_id, join_date)
-*/
-select members.join_date from members;
-select * from sales;
-select * from menu;
 
 select sales.customer_id,
     count(sales.product_id),
@@ -169,3 +161,59 @@ select sales.customer_id,
 ;
 
 -- 10. In the first week after a customer joins the program (including their join date) they earn 2x points on all items, not just sushi - how many points do customer A and B have at the end of January?
+/*
+sales(customer_id, order_date, product_id)
+menu(product_id, product_name, price)
+members(customer_id, join_date)
+*/
+select * from members;
+select * from sales;
+select * from menu;
+
+#with fulltable as(
+create temporary table fulltable
+    select sales.customer_id,
+        sales.order_date,
+        sales.product_id,
+        members.join_date,
+        menu.price
+    from sales
+    inner join members
+    on members.customer_id = sales.customer_id
+    inner join menu
+    on sales.product_id = menu.product_id
+#)
+;
+
+#,temptable as(
+create temporary table temptable
+    select sum(fulltable.price * 20) as xtra
+    from fulltable
+    where fulltable.order_date > fulltable.join_date and fulltable.order_date <= fulltable.join_date+6
+    group by fulltable.price
+#)
+;
+
+drop table if exists endtable;
+#,endtable as(
+create temporary table endtable
+    select sum(
+        case 
+            when fulltable.product_id = 1 and fulltable.order_date <= '2021-01-31' then fulltable.price * 20
+            when fulltable.order_date <= '2021-01-31' then fulltable.price * 10
+        end) as points
+    from fulltable
+#)
+;
+
+select * from fulltable;
+select * from temptable;
+select * from endtable;
+
+select xtra
+from temptable
+inner join points
+on 
+
+'2021-01-31'
+;
