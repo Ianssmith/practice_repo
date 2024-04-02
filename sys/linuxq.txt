@@ -1,0 +1,52 @@
+    • How do you display the first 10 lines of a file using the command line?
+    head <path/filename.x>
+    • How do you display the last 5 lines of a file using the command line?
+    tail <path/filename.x> -n 5
+    • How do you sort the contents of a file in ascending order using the command line?
+    sort <path/filename.x>
+    • How do you count the number of occurrences of a specific word in a file using the command line?
+    grep -c /regex_pattern/ <path/filename.x>
+    • How do you find and replace a specific word in a file using the command line?
+    sed 's/<old_string>/<new_string>/g' <path/filename.x>
+    • How do you display the size of a file in human-readable format using the command line?
+    du -h <path/filename.x>
+    • How do you display the current date and time in a specific format using the command line?
+    date +[format options eg. %a]
+    • How do you find the process ID (PID) of a running process using the command line?
+    top or ps -aux | grep <program name or other search pattern>
+    • How do you kill a process using its process ID (PID) using the command line?
+    kill -9 <PID>
+    • How do you create a compressed tar archive of a directory and exclude specific files from it using the command line?
+    tar --exclude="<filename or pattern> -zcvf backup.tar.gz
+    • How do you set an environment variable in Linux using the command line?
+    create/edit a '.env' or '.bash_profile' file and name the variable MYVAR="info"
+    or 
+    export MYVAR="info"
+    • How do you list all installed packages on a Debian-based Linux distribution using the command line?
+    (as root)
+    apt list --installed 
+    • How do you change the permissions of a file to read-only for the owner and group using the command line?
+    chmod 440 <path/filename.x>
+    • How do you find all files with a specific extension in a directory and its subdirectories using the command line?
+    ls -R <path/to/dir> | grep -E *.<extension>$
+    • How do you create a backup of a file with a timestamp in its filename using the command line?
+    cat <filename.sh> > <filenamebak>$(date +%T).sh
+    • How do you search for a specific string in all files within a directory and its subdirectories using the command line?
+    grep -r <searchterm> <path/location>
+    • How do you display the current network configuration (IP address, subnet mask, etc.) using the command line?
+    ifconfig
+    ip link
+    • How do you create a new user with a specific home directory and set their password using the command line?
+    (as root)
+    useradd -m -d </path/to/homedir> <username>
+    passwd <username>
+    • How do you display the available disk space on your system using the command line?
+    df -h
+    • How do you schedule a command or script to run at a specific time using the cron system?
+    run the command:
+    crontab -e
+    then edit the file adding in scheduled tasks with the following format
+    <Minute> <Hour> <Day> <Month> <Day of Week> <Command>
+    eg. 00 13 * * * * <command or script>
+    would run the script or command every day at 1pm
+    save the file and exit the editor
