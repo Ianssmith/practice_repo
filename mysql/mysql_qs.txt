@@ -1,0 +1,9 @@
+-what is an sql index? how does it work?
+-what are sql window functions?
+performs a calculation over a set of table rows that are somehow related to the current row
+differs from aggregate and groupby in that you don't have to group rows of data into a single output row
+so rows get to retain their separate identity
+they operate on chosen rows by a partition or frame using the "over()" clause in a select statement and partition by
+-difference between rank and dense rank?
+rank will skip over subsequent numbers in the ranking if there are duplicates ie 1,2,3,3,5,6,7
+dense rank will not skip ranking numbers after duplicates ie 1,2,3,3,4,5,6,7

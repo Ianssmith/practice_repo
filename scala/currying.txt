@@ -1,0 +1,69 @@
+Currying is a concept in functional programming where a function 
+that takes multiple arguments is transformed into a sequence of 
+functions, each taking a single argument.
+
+The 
+process of currying allows you to create specialized versions of 
+a more general function by fixing some of its arguments
+. This can be useful for creating more modular and 
+reusable code, as well as for implementing certain functional programming techniques.
+
+Here's a simple example in JavaScript:
+
+javascript
+Copy code
+// Original function taking two arguments
+function add(x, y) {
+  return x + y;
+}
+
+// Curried version of the function
+function curriedAdd(x) {
+  return function(y) {
+    return x + y;
+  };
+}
+
+// Usage of the curried function
+const add2 = curriedAdd(2); // Fix the first argument to 2
+console.log(add2(3)); // Outputs: 5
+In this example, curriedAdd takes the first argument x 
+and returns a function that takes the second argument y
+. This allows us to fix the value of x 
+and create a specialized version of the add function called add2 which only requires one argument.
+
+In Scala, currying refers to the process of transforming 
+a function that takes multiple arguments into a sequence of 
+functions, each taking a single argument. This is 
+achieved using partial application of functions. Scala's support for functional programming makes currying a natural and powerful technique.
+
+Here's an example of currying in Scala:
+
+// Original function taking two arguments
+def add(x: Int, y: Int): Int = x + y
+
+// Curried version of the function
+def curriedAdd(x: Int)(y: Int): Int = x + y
+
+// Usage of the curried function
+val add2 = curriedAdd(2) _ // Fix the first argument to 2
+println(add2(3)) // Outputs: 5
+In the curriedAdd function definition, the parameters are separated 
+into multiple parameter lists by putting them in parentheses. 
+This enables partial application, allowing you to fix one 
+or more arguments of the function.
+
+Scala also provides syntactic sugar for currying, allowing you 
+to define functions with multiple parameter lists using a more 
+concise syntax. Here's the same example using 
+syntactic sugar:
+
+def curriedAdd(x: Int)(y: Int): Int = x + y
+
+// Syntactic sugar for defining curried functions
+val add2 = curriedAdd(2) _
+println(add2(3)) // Outputs: 5
+Currying in Scala is particularly useful when working with higher
+-order functions or when building DSLs (Domain Specific 
+Languages) where partial function application can lead to more 
+expressive and readable code.
