@@ -5,10 +5,17 @@ is called automatically running any setup functionality for the new instance.
 2.What is self keyword ?
 a keyword used to refer to the current instance of an object within the scope of it's usage.
 3.What is lambda functon?
+a small anonymous function created using the lamda keyword typically used when you need a simple function for a short period of time
+and don't wnat to formally define a function with the def keyword
+they can only have one expression but multiple args, often used with methods or functions that 
+take other functions as args like map(), filter() and sort()
 an anonymous function which is generally short and concise and for a short lived purpose like a calculation or aggregation operation
 4.Difference between lambda and normal function?
 a lambda is anonymous and has no definition outside of the location where it is created and used.
+lamda functions implicitly return the result normal functions use the 'return' keyword
+lamda functions cannot contain assignments or statements
 5.What are generators? When to use ? share one example
+generators yield an iterator object
 generators iterate through a sequence on the fly instead of storing everything in memory, they use the 
 yield keyword instead of return and rather than terminationg the function execution is paused until next() is called
 6.Python is compiled or interpreted language ? what does it mean?
@@ -32,7 +39,8 @@ for adding convenience or consistency when extending the functionality of a func
 data for which in order to be standardized some of the data needed a certain process to be run on it and the rest did not 
 by adding a decorator to the ingestion function I was able to apply the cleaning functionality as needed and without 
 modifying the existing function maintaining compatibility with both inputs
-11.What are Iterators? //(revisit)
+11.What are Iterators? //(revisit) [an iterable is an object that can be iterated over by and iterator... ]
+an object which iterates over a collection uses the .next() method to continue to the next item
 innerworkings of python iteration functionality implemented automatically by for loops 
 but can also be used to create custom iteration functionality
 12.What is slicing?

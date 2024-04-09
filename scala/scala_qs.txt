@@ -1,26 +1,160 @@
 Scala
 1.What is a trait ? when to use ? 
+a concept for extending the funcationality of a class using methods
+they are similar to java interfaces but cannot be instantiated and have not args or params
+they can contain abstract or concrete memebers
+scala traits support multiple inheritance unlike classes so a class can inherite mulptiple traits
+traits are often used as mixins being added onto classes using the 'extends' keyword
+
 2.Difference between trait and sealed trait?
+a sealed trait cannot be instantiated directly
+Sealed traits can only be extended by classes and objects defined in the same file or scope where the sealed trait is defined.
+
 3.What is an abstract class? 
+an abstract class is a class definition containing constant declarations, default methods (java+8) and
+ abstract methods which are methods without implementation
+which act as a sort of contract for how new classes should be created which inherit from the abstract class
+since there are no implementations in the abstract class inheriting classes must provide their own implementation
+
 4.What is the difference between an java interface and a scala trait?
+scala traits are more flexible allowing for concrete methods, fields, and constructors
+traits can contain concrete and abstract classes and methods
+since interfaces don't allow fields they are safe from the diamond problem of classes inheriting the same elements from 
+multiple parents. Scala does have fields and so must avoid the diamond problem through the use of linearization
+    linearization: The linearization order determines the sequence in which the traits' members are inherited by the class
+        left-to-right order: traits are applied in the order they are listed in the class definition
+        depth-first search: a depth first search is done within each level of the inheritance heirarchy
+        precedence of last trait: if multiple traits define a member with the same name the last trait definition takes precedence
+        traits are only inherited once
+neither can be instantiated directly
+since java interfaces cannot have method implementations they are not suitable for mixin behaviour like scala traits are
+java interface methods are implicitly public
+scala trait methods are also public by default but can have private or protected modifiers
+
 5.What is a singleton 
+a design pattern that ensures that a class has only one instance and provides a global point of access to that instance
+it has a private constructor to prevent external instatiation
+and a public getSingletonInstance() method or similar
+often used for managing resources that should be shared across 
+the entire application, such as configuration settings, 
+database connections, or thread pools. However, it's 
+important to consider the thread safety of the singleton 
+implementation, especially in multi-threaded environments
+
 6.What is a higher order function?
-a function which takes a function as an argument or is passed to another function as an argument.
+a function which takes another function as a parameter, returns another function, or is passed to another function as an arg
+
 7.What is a closure 
-8.What is a companion object? What rae the advantages ? example
+a function that binds a current scope to a subcontext
+if a function references a variable inside the function in which it is contained 
+that variable won't be garbage collected when the outer scope exits and 
+can be accessed again via that function called a 'closure'
+-A closure is a function that captures and retains references 
+to variables from the lexical scope in which it was 
+defined, even if that scope is no longer active
+. It allows a function to access variables from its 
+surrounding scope, even after that scope has exited
+-Closures are particularly useful in functional programming, enabling powerful 
+constructs like higher-order functions, partial function application,
+and currying. They are commonly used in scenarios such 
+as event handling, asynchronous programming, and implementing DSLs (Domain Specific Languages)
+
+8.What is a companion object? What are the advantages ? example
+a object defined inside an class that has the same name as the class or trait
+They provide a way to define static methods, constants, 
+and other utility functions related to a class or trait
+. They are often used for encapsulating functionality that is 
+related to a specific class or trait but doesn' t depend on any instance-specific state.
+a companion function (or a method defined in a companion object) can be called without creating 
+an instance of the class.
+companion objects have access private members
+of their associated class or trait allowing you to define static methods that 
+still have access to the private state
+
 9.Nil vs Null vs null vs Nothing vs None vs Unit 
+-Nil is an empty list of type List[Nothing]. It represents the end of a list.
+It is commonly used when constructing lists using cons (::) or pattern matching.
+-Null is a trait whose sole instance is 'null'
+it is a subtype of all reference types
+-null is a keyword representing a null reference
+-Nothing is used to indicate that a function does not return 
+normally (e.g., throws an exception) 
+or as a return type when a function doesn't return a value.
+-None is an object representing the absence of a value (in scalas Option monad)
+it is a case object extending scalas Option[Nothing]
+It is commonly used in conjunction with Some to represent 
+optional values in a safe, functional way.
+-Unit is a type in Scala representing the absence of a meaningful value.
+It is similar to void in languages like Java or C++.
+Functions that do not return a value explicitly return Unit.
+It is often used as a return type for side-effecting operations.
+
 10.What is pure function?
-a function that has no "side effects" is deterministic (produces same output with same input) and referentially
-transparent (meaning you can replace the function call with it's result)
-11.What is SBT and how have you used it? 
+    1.a function that has no "side effects" 
+    2. is deterministic (produces same output with same input) and referentially
+        transparent (meaning you can replace the function call with it's result)
+
+11.What is SBT and how have you used it? (revisit?)
+'simple build tool' as the name indicates is a build tool for java and scala
+it can be used to 'cross-build' projects for multiple scala versions
+typesafety throwing compilation errors for typos
+
 12.What is currying?
+currying refers to the process of transforming a function that 
+takes multiple arguments into a sequence of functions, each taking a single argument
+uses closures
+each time an argument is passed it returns a new function that accepts the next argument
+
 13.Difference between currying and higher-order functions
+currying is a concept that uses higher-order functions 
+currying returns a sequence of functions with 1 argument in place
+of 1 function using multiple arguments
+
 14.Difference between var and val?
+vars are mutable 
+vals are immutable
+
 15.What is case class?
+a special kind of class normally used to hold data
+by default it is immutable
+case classes automtically provide implementations of 'equals' 'hashcode' 'copy' and 'toString'
+case classes automatically generate a companion object with an 'apply' 'unapply' and 'tupled' method
+case classes implement 'serializable'
+case classes extend the 'product' trait and so cannot have more than 22 parameteres
+case classes are compared by their structure instead of their references
+
 16.Why/when to use case class? Example
+it's normally used to hold data
+if you need pattern matching
+
 17.Difference between case class and normal class?
+a case class can't inherit from another case class 
+by default it is immutable
+case classes automtically provide implementations of 'equals' 'hashcode' 'copy' and 'toString'
+case classes automatically generate a companion object with an 'apply' 'unapply' and 'tupled' method
+case classes implement 'serializable'
+
 18.Scala type hierarchy?
+Scala has no primitive types like Java, all data types in scala are objects
+Any is the superclass of all classes, also called the top class it defines some universal methods equals, hashCode, and toString
+it's two direct subclasses are
+AnyVal: AnyVal represents value classes. All value classes are predefined; they correspond to the primitive types of Java-like languages
+    nine predefined value types and they are non-null able (except Unit): Double, Float, Long, Int, Short, Byte, Char, Unit, and Boolean
+    they are an abstract final type [unit can be expressed literally as ()]
+AnyRef:represents reference classes. All non-value types are defined as reference types
+    all custom types belong here
+    corresponds to java.lang.Object
+Nothing:a subclass of all value types aka bottom type
+    you cannot create an instance of it or assign it to anything
+    (can be used to provide a return type to a method which always throws an exception) program exit, or infinite loop
+Null: a sublcass of all reference types
+
+    any -> anyval--anyref->(everything-else)->nothing<--null
+
 19.What are partially applied functions?
+using closures and currying you can sort of pause a curryed function at a certain stage using the current
+state to be applied to multiple cases providing a form of code reuse with less repitition
+
 20.What is tail recursion.
 a functional way to implement a looping mechanism, where if the last action of a
 function is to call itself it's stack frame can be resused preventing the need for a new 
