@@ -1,0 +1,9 @@
+type    multiple inheritance    abstract/concrete elements  arguments   instantiation   other
+jave_interface   
+java_abstract class
+java_class   
+scala_class   
+scala_trait   
+scala_sealed trait 
+scala_case class  
+scala_abstract class

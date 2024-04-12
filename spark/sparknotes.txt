@@ -25,3 +25,19 @@ called driver (master)
 worker (slaves) nodes have many executors (small execution in spark)
 
 ___mvnrepository.com___
+
+collect()
+all data from all executers will come to the driver program which could likely lead to an out of memory error
+'what might cause an out of memory error in spark'
+
+execution modes
+client mode
+    driver program runs on client machine
+cluster mode
+
+transforms lazy (eg flatmap map)
+    if it is returning a new rdd ( Resilient Distributed Dataset)
+        narrow transform has no shuffling
+        wide transformation does have shuffling (optimization:avoid if possible) 
+actions eager
+    returns other stuff arrays
