@@ -1,0 +1,195 @@
+hdfs :hadoop distributed file system, scalable, fault tolerant, high availability -> namenode(master) -> datanode(slave)
+	namenode: metadata, transaction logs user activity, instructs datanodes
+	datanode:storing operating on data default 128mb blocks, default replication level 3,
+		rackawareness physical grouping of nodes used by namenode to optimize network traffic and read/write 
+
+mapreduce: map() breaks down data into key value pairs
+Map Task:
+	RecordReader: Responsible for breaking records, and providing key-value pairs to the Map function.
+	Map: A user-defined function processing Tuples obtained from RecordReader.
+	Combiner: Optional component for grouping data in the Map workflow, similar to a local reducer.
+	Partitioner: Fetches key-value pairs generated in the Mapper Phase, generating shards corresponding to each reducer.
+Reduce Task:
+	Shuffle and Sort: Initiates the Reducer task, sorting data during the shuffling process.
+	Reduce: Gathers Tuples from Map, performs sorting and aggregation based on key elements.
+	OutputFormat: Writes key-value pairs into files using a record writer.
+
+yarn :yet another resource negotiator
+	oversees resource managment and job scheduling
+	global resource manager
+	application masters
+	nodemanager monitors container resource usage data for the resource manager
+hadoop: common
+
+hadoop fs -mkdir
+hadoop fs -touchz
+hadoop fs -put
+hadoop fs -get
+hadoop fs -copyToLocal
+hadoop fs -cp
+hadoop fs -mv
+
+hadoop fs -rmdir ?(not shown)
+hadoop fs -rm (not shown)
+hadoop fs -chmod <filename>
+___hadoop fs -help <command>
+hadoop fs -appendToFile <file1> <file2> <filen> <hdfspath/mergedfile> (merges files from local to file in hadoop fs)
+hadoop fs -setrep <filename> (set replications for a specific file)
+hdfs fsck <path or dir>
+hadoop fs -getmerge (merge files from hdfs to local)
+
+orc for hive
+parquet for spakr
+
+sqoop (retired product we will use scala or python)
+hadoop tool used for ingestion
+sqoop list-databases --connect jdbc:postgresql://ec2-3-9-191-104.eu-west-2.compute.amazonaws.com:5432/testdb --username consultants --P WelcomeItc@2022
+sqoop list-tables --connect jdbc:postgresql://ec2-3-9-191-104.eu-west-2.compute.amazonaws.com:5432/testdb --username consultants --P WelcomeItc@2022
+sqoop import --connect jdbc:postgresql://ec2-3-9-191-104.eu-west-2.compute.amazonaws.com:5432/testdb --username consultants --p WelcomeItc@2022 --table tablename --table.dir USUKMarHDFS/ian
+
+YARN
+hadoop 1 had
+job tracker: on namenode
+task tracker: on datanode
+	tracks map task and reduce task (smallest execution block)
+		map task executes Mapper (not decided by developer) 
+		reduce task executes reducer (decided by developer ideally 1)
+		^can only execute their respective tasks^
+disadvantage of hadoop 1 some resources were idle because they were dedicated to only map or only reduce tasks
+job tracker was overloaded with work
+hadoop 2
+resource manager: contained within the name node
+	scheduler: resposibe for allocating resource to various apps
+	application manager (AsM): decides whether to accept or reject the app
+		negotiates which container will execute the app first as the application master (one container one per application)
+node manager: each data node has it's own manager
+	container: smallest execution block and is not dedicated to map or reduce
+	application master: 'wholly resposible for the one application(aka client)'
+		app master executes in one of the containers
+		manages that application
+		negotiate resources for the app with the resource manager
+		app master will divide the work among the containers
+(^ containers ^ server[namenode] divided into smaller containers )
+
+namenode has metadata edit log and FSimage stored on disk
+
+hadoop distros: (vendors)
+cloudera, horton works, MapR
+
+
+MAPREDUCE
+map -> reduce
+input->spitting->mapping->shuffling->reducing->final
+
+hive SQL
+hbase noSQL
+
+tabletypes
+-managed 
+data is in the hive location
+when a table is deleted data and metadata are deleted
+-external
+not managed by hive can be any location
+data is used by hive and some other app (like hbase)
+when a table is deleted only the metadata is deleted
+
+hive command:
+create external table ukusmar.emplR( empid Int, empName String) row 
+format delimited fields terminated by ',' stored as textfile location 
+'/user/ec2-user/UKUSMarHDFS/rupali/empl' tblproperties("skip.header.line.count"="1");
+
+create external table ukusmar.openx_ian( currency String, 
+rate Float) row format serde 'org.apache
+.hive.hcatalog.data.JsonSerDe' stored 
+as textfile location '/user/ec2-user/
+UKUSMarHDFS/ian/openx_test.json' tblproperties("skip.header.line.count"="4");
+
+
+for 'partitioning' 
+low cardinality: a column with low distinct values
+static partitioning: developer has to maintain the partitions manually; developer creates new partitions
+dynamic partitioning: hive will take care of creating and managing partitions
+impementation:
+	create non-partition table
+	load data into it
+	create partition table
+	insert data into the partition table with the help of non-partition table
+	check partition
+v
+	create external table x(id, name, countr) etc etc
+	create external table xP(id, name) partitioned by (country) etc etc
+	insert overwrite table xP select * from x
+
+	'load' just uploads data simply
+	'insert' 
+
+hue 
+ecs-user
+pw 
+WelcomeItc@2022
+	
+cloudera
+Consultants
+WelcomeItc@2022
+18.132.63.52:7180/cmf/home
+hbase and kafka stopped 
+redhat 8.7
+
+Cloudera Manager Web UI:
+http://18.132.63.52:7180/cmf/home
+User: Consultants
+Password:WelcomeItc@2022
+
+1.
+create external table ukusmar.employee( empid Int, 
+empName String, dept String,Country String) row 
+format delimited fields terminated by ',' stored as textfile location 
+'/user/ec2-user/UKUSMarHDFS/rupali/employee' tblproperties("skip.header.line.count"="1");
+
+2.
+create external table ukusmar.employeeP1( empid Int, 
+empName String, dept String) partitioned by (country 
+String) row format delimited fields terminated by ',' stored 
+as textfile  tblproperties("skip.header.line.count"="1");
+
+3.
+insert overwrite table ukusmar.employeeP1 select empid,empName,dept,country from ukusmar.employee
+
+4. 
+hadoop fs -ls /warehouse/tablespace/external/hive/ukusmar.db/employeep
+hadoop fs -cat /warehouse/tablespace/external/hive/ukusmar.db/employeep/000000_0
+
+impala - massive parallel processing (mpp)
+map reduce writes data to disk at each stage
+whatever hive query uses map reduce 
+impala implements them in memory so is much lower latency
+
+bucketing:
+a bucket is like a file
+(partition is like a directory)
+
+buckets created in 2s ie 2,4,6
+columns for buckets should be frequently queryied
+high cardinality 
+int's or strings
+no nesting of buckets
+
+explain/implement partitioning
+explain/implement bucketing
+
+hive stros data on hdfs which is a write once read many(worm)
+update and delete 
+	not possbile with hive 2
+	possible with hive 3
+		table has to be managed table and format must be ORC
+
+hive file formats:
+Text File
+Sequence File
+RC File
+AVRO File
+ORC File
+Parquet File
+
+cron job (airflow also popular)
+'impala-shell' command prompt for impala

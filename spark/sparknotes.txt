@@ -1,0 +1,27 @@
+spark
+
+mapreduce lots of boilerplate
+only java 
+no repl
+only batch
+disk (slow)
+not optimized for iterative processing
+no graph processing
+
+spark
+memory based
+batch and stream
+good at iterative
+supports graph processing
+
+resource managers / cluster manager
+yarn
+mesos (not widely used)
+standalone
+kubernetes (deployment)
+
+spark uses master slave structure
+called driver (master)
+worker (slaves) nodes have many executors (small execution in spark)
+
+___mvnrepository.com___

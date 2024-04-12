@@ -1,0 +1,184 @@
+Hadoop
+1.Mention Hadoop distribution? Difference between CDH and CDP
+hortonworks aquired by cloudera
+cloudera
+mapR shut down in 2019 aquired by hp
+cloudera is the main one now,
+CDH (cloudera distrubuted hadoop) retired as of v6.3
+CDP(cloudera data platform) effectively replaces CDH
+    CDP is designed to run on-premises (like 
+    CDH) but it is also a cloud-native 
+    technology that can be run in the public cloud. 
+    CDP is also designed to support hybrid and private cloud architectures
+
+2.Explain Hadoop Architecture
+name node holding metadata and master over data nodes
+datanodes send heartbeat to namenode every3 sec
+namenode stores metadata on datanodes in ram
+when data operations and disk writes begin on the data nodes they send a block report to the namenode every 10 seconds also stored in ram
+the namenode also maintains metadata in disk
+
+3.Configuration files used during hadoop installation
+hadoop-env.sh: environment variable java path, pid path, logfile location, 
+    metrics, hdfs path, enabling trash, enabling high availability, zookeeper
+core-site.xml
+hdfs-site.xml: important file, replication factor, where name node store it's metadata on disk, 
+    where data node stores data, if secondary name node is running
+mapred-site.xml: 
+yarn-site.xml: resource manager and node manager related properties
+master and slave files
+
+3.5 hadoop modes?
+standalone mode: default mode uses local fs and a single java process
+pseudo-distributed: uses a single node hadoop deployment to execute all hadoop services
+fully-distributed: uses separate nodes to run hadoop master and slave nodes
+
+4.Difference between Hadoop fs and hdfs dfs
+the 'hdfs dfs' (formerly hadoop dfs) command is used very specifically for hadoop filesystem (hdfs) data operations while '
+hadoop fs' covers a larger variety of data present on external platforms as well
+a more generic command ie can be used for local remote (s3, ftp etc)
+
+5.Difference between Hadoop 2 and Hadoop 3
+timeline service:
+    Hadoop 3 improves the timeline service v2 and improves the 
+    scalability and reliability of timeline service. Hadoop 2 doesn
+    't support GPUs. Hadoop 3 enables scheduling of 
+    additional resources, such as disks and GPUs for better integration with containers, deep learning & machine learning
+erasure encoding:
+    Replication is a costly affair in Hadoop 2 as it 
+    follows a 3x replication scheme leading to 200% additional 
+    storage space and resource overhead. Hadoop 3.0 
+    will incorporate Erasure Coding in place of replication consuming comparatively less storage space whilst providing same level of fault tolerance
+hadoop 2 doesnt support gpus
+expanded file system compatibility
+automatic namenode recovery in v3
+
+6.What is replication factor ? why its important
+replication factor is how many replicas/copies are stored for blocks in a cluster default is 3.
+this provides fault tolerance by redundancy. replicas are never all stored on the same machine or rack
+
+7.What if Datanode fails?
+the namenode stores metadata about the status of all datanodes if 
+the namenode does not receive a heartbeat from a datanode for a certain period of time
+that node will be marked as dead and the blocks on it will begin to be replicated on other nodes
+
+8.What if Namenode fails?
+in hadoop 2 you could run 2 redundant namenodes so if one failed the cluster would quickly failover to the other namenode
+in hadoop 3 Failure detection - each of the NameNode 
+machines in the cluster maintains a persistent session in ZooKeeper
+. If the machine crashes, the ZooKeeper session will 
+expire, notifying the other NameNode that a failover should be triggered.
+Active NameNode election - ZooKeeper provides a simple mechanism to 
+exclusively elect a node as active. If the current 
+active NameNode crashes, another node may take a special 
+exclusive lock in ZooKeeper indicating that it should become the next active.
+
+9.Why is block size 128 MB ? what if I increase or decrease the block size
+
+128 is the minimum block size for hadoop v2
+-With a larger block size, each mapper task in a MapReduce job can process more data before moving on to the next tas
+-By reading and writing data in larger contiguous chunks, Hadoop can reduce the number of disk seeks and minimize the overhead of disk operations.
+-each block also has metadata stored about it by the name node
+ which with larger blocks will reduce the storage taken up by the metadata and the load on the namenode
+ -128 MB strikes a balance between minimizing the overhead of data transfer and minimizing the seek time for random access
+ smaller blocks might decrease the seek time for a record within a block but at the expense of more data transfer overhead
+
+10.Small file problem
+similar to the block size reasoning each file has a 150bytes of metadata on the namenode plus 16 additional bytes for each replica
+if there are lots of small files the namenode can rapidly become overloaded 
+
+11.What is Rack awareness?
+at least one replica will be on one other machine on one other rack
+hadoop master daemons obtain the 'rack-id' of cluster workers by invoking either an external script or a java class
+as specified by configuration files high reliability and fault tolerance
+the namenode maintains a knowledge of the cluster topology and datanodes report their rack location to the namenode
+
+12.What is SPOF ? how its resolved ?
+namenode high availability: via "standby namenode" (and also secondary namenode)
+datanode and task tracker redundancy 
+decentralized job tracker
+rack awareness
+
+a spof or single point of failure is avoided by hadoop by several mechanisms
+-datanode and task tracker redundancy blocks have a default repliction factor of 3 in data nodes
+at least one replica will be on one other machine on one other rack
+having a standby namenode and a secondary namenode which takes 'snapshots' in case of failure
+-the jobtracker level is decentralized 
+    there is a resource manager that manages the resources and scheduling across the cluster
+    and each client or application has an application master which manages execution
+-rack awareness as described above also contributes to avoiding a spof
+
+13.Explain zookeeper?
+zookeeper is a scheduler for hadoop batch jobs
+spark has it's own scheduler
+it is a coordination service for distributed systems manages naming, configs, synchronizaiton
+
+In a distributed system, there are multiple nodes or 
+machines that need to communicate with each other and coordinate 
+their actions. ZooKeeper provides a way to ensure that 
+these nodes are aware of each other and can coordinate 
+their actions. It does this by maintaining a hierarchical 
+tree of data nodes called “Znodes“, which can 
+be used to store and retrieve data and maintain state 
+information. ZooKeeper provides a set of primitives, such 
+as locks, barriers, and queues, that can 
+be used to coordinate the actions of nodes in a 
+distributed system. It also provides features such as leader 
+election, failover, and recovery, which can help 
+ensure that the system is resilient to failures. ZooKeeper 
+is widely used in distributed systems such as Hadoop, 
+Kafka, and HBase, and it has become an essential component of many distributed applications
+
+14.Difference between -put and -copyFromLocal?
+they both copy a file from the local machine to the hdfs
+
+15.What is erasure coding?
+a lower storage cost form of data backup withouhaving to fully replicate it involving splitting data
+into fragments/data blocks and the creating addtional 'parity blocks'
+that can be used for data recovery
+the parity fragments can be used to rebuild the data unit without experiencing data loss
+
+16.What is speculative execution?
+hadoop will run multiple copies of the same task simultaneously on different nodes increasing fault tolerance and speed
+hadoop then monitors tasks within a job and if one is significantly slower (a straggler) 
+the job tracker or resource manager will identify it as a potential candidate for 
+speculative execution
+it will then laucnh additional copies of the same task on  other nodes
+the first to complete is the winner and the others are terminated
+
+17.Explain Yarn Architecture
+main components are
+resource manager (RM) :the central authority that arbitrates resources among all the applications running on the Hadoop cluster
+    scheduler: responsible for allocating resources to applications, maintains info on available clusters and  schedules their usage
+    application manager: 
+and
+node manager (NM) : a per-node agent responsible for managing resources and containers on individual nodes in the cluster
+    launches and monitors containers, executing tasks
+application master: per application
+
+18.How does ApplicationManager and Application Master  differ
+-The ApplicationMaster is a per-application, per-job component in the YARN (Yet Another Resource Negotiator) architecture of Hadoop
+it negotiates resources with the resourceManager coordinating the execution of tasks and monitoring job progress.
+it runs in a container allocated by the resourceManager
+-"ApplicationManager" is not a specific component in the 
+Hadoop architecture like the ApplicationMaster. It's a 
+more general term that can refer to various management or 
+coordination components within the Hadoop ecosystem
+
+19.Explain Mapreduce working?
+data is split into chunks and each sent to a different node where it is "mapped" and operated on by that node the result of that 
+is reduced and sent back with all the other results to be merged back together
+not good for kmeans clustering spark would be the solution
+
+20.How many mappers are created for 1 GB file?
+
+21.How many reducers are created for 1 GB file?
+
+22.What is combiner?
+What is partitioner?
+
+spark is just processing
+it would be better to compare it to mapreduce
+spark prioritizes running on ram
+
+hive: 'describe formatted <table name>'

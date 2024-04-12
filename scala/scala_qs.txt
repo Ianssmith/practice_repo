@@ -1,20 +1,22 @@
 Scala
 1.What is a trait ? when to use ? 
-a concept for extending the funcationality of a class using methods
-they are similar to java interfaces but cannot be instantiated and have not args or params
+a mechanism for extending the funcationality of a class using methods
+they are similar to java interfaces neither can be instantiated
 they can contain abstract or concrete memebers
 scala traits support multiple inheritance unlike classes so a class can inherite mulptiple traits
 traits are often used as mixins being added onto classes using the 'extends' keyword
 
 2.Difference between trait and sealed trait?
-a sealed trait cannot be instantiated directly
+neither can be instantiated directly
 Sealed traits can only be extended by classes and objects defined in the same file or scope where the sealed trait is defined.
 
 3.What is an abstract class? 
-an abstract class is a class definition containing constant declarations, default methods (java+8) and
+an abstract class is a class definition containing constant declarations, default methods-(java+8) and
  abstract methods which are methods without implementation
 which act as a sort of contract for how new classes should be created which inherit from the abstract class
 since there are no implementations in the abstract class inheriting classes must provide their own implementation
+they are fully interoperable with java abstract classes
+a class can only extend 1 abstract class (but multiple traits)
 
 4.What is the difference between an java interface and a scala trait?
 scala traits are more flexible allowing for concrete methods, fields, and constructors

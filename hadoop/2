@@ -1,0 +1,4 @@
+hdfs :hadoop file system
+mapreduce: 
+yarn :yet another resource negotiator
+hadoop: common
